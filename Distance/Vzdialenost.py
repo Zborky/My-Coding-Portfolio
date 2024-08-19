@@ -3,58 +3,77 @@ from opencage.geocoder import OpenCageGeocode
 from geopy.distance import geodesic
 import os
 
-# API kľúč pre OpenCage
-key = ""  # Sem vlož svoj skutočný API kľúč
+# API key for OpenCage
+key = ""  # Insert your actual API key here
 geocoder = OpenCageGeocode(key)
 
 def get_coordinates(city_name):
+    """
+    Retrieve coordinates for a given city name using OpenCage geocoding API.
+    
+    Args:
+        city_name (str): The name of the city to geocode.
+    
+    Returns:
+        tuple: A tuple containing latitude and longitude of the city, or None if the city is not found.
+    """
     try:
         results = geocoder.geocode(city_name)
         if results and len(results) > 0:
             return (results[0]['geometry']['lat'], results[0]['geometry']['lng'])
         else:
-            print(f"Nenájdené súradnice pre mesto: {city_name}")
+            print(f"No coordinates found for city: {city_name}")
             return None
     except Exception as e:
-        print(f"Chyba pri geokódovaní mesta {city_name}: {e}")
+        print(f"Error while geocoding city {city_name}: {e}")
         return None
 
 def calculate_distance(coord1, coord2):
+    """
+    Calculate the distance between two coordinates using geodesic distance.
+    
+    Args:
+        coord1 (tuple): Latitude and longitude of the first location.
+        coord2 (tuple): Latitude and longitude of the second location.
+    
+    Returns:
+        float: The distance in kilometers between the two coordinates, or None if any coordinate is None.
+    """
     if coord1 and coord2:
         return geodesic(coord1, coord2).kilometers
     else:
         return None
 
-# Definovanie ciest k Excel súborom
+# Define file paths for input and output Excel files
 input_file_path = "C:/Users/Jakub/Desktop/Python/Vzdialenost/nazvy_miest.xlsx"
 output_file_path = "C:/Users/Jakub/Desktop/Python/Vzdialenost/nazvy_miest_s_vzdialenostami.xlsx"
 
-# Kontrola existencie vstupného súboru
+# Check if the input file exists
 if not os.path.exists(input_file_path):
-    print(f"Chyba: Súbor {input_file_path} neexistuje.")
+    print(f"Error: File {input_file_path} does not exist.")
 else:
-    # Načítanie Excel súboru
+    # Load the Excel file into a DataFrame
     df = pd.read_excel(input_file_path)
 
-    # Predpokladám, že stĺpce obsahujú názvy miest v stĺpcoch 'Mesto1' a 'Mesto2'
-    df['Vzdialenost (km)'] = None
+    # Assume columns contain city names in 'Mesto1' and 'Mesto2'
+    df['Distance (km)'] = None
 
-    # Iterovanie cez každý riadok a výpočet vzdialenosti
+    # Iterate through each row and calculate the distance
     for index, row in df.iterrows():
         city1 = row['Mesto1']
         city2 = row['Mesto2']
-        print(f"Spracovanie dvojice: {city1} - {city2}")
+        print(f"Processing pair: {city1} - {city2}")
         coord1 = get_coordinates(city1)
         coord2 = get_coordinates(city2)
         if coord1 and coord2:
             distance = calculate_distance(coord1, coord2)
-            df.at[index, 'Vzdialenost (km)'] = distance
-            print(f"Súradnice: {city1} -> {coord1}, {city2} -> {coord2}")
-            print(f"Vzdialenosť: {distance:.2f} km\n")
+            df.at[index, 'Distance (km)'] = distance
+            print(f"Coordinates: {city1} -> {coord1}, {city2} -> {coord2}")
+            print(f"Distance: {distance:.2f} km\n")
         else:
-            print(f"Nie je možné získať súradnice pre mestá {city1} a {city2}.")
+            print(f"Unable to get coordinates for cities {city1} and {city2}.")
 
-    # Uloženie výsledkov späť do Excel súboru
+    # Save the results back to an Excel file
     df.to_excel(output_file_path, index=False)
 
-    print(f"Výpočty dokončené a výsledky uložené do {output_file_path}")
+    print(f"Calculations completed and results saved to {output_file_path}")
