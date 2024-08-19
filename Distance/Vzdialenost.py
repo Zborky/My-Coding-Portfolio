@@ -4,7 +4,7 @@ from geopy.distance import geodesic
 import os
 
 # API kľúč pre OpenCage
-key = "7d8a69b6a38342cc87ce6a629eb65989"  # Sem vlož svoj skutočný API kľúč
+key = ""  # Sem vlož svoj skutočný API kľúč
 geocoder = OpenCageGeocode(key)
 
 def get_coordinates(city_name):
