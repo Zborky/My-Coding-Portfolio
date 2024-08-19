@@ -15,7 +15,7 @@ def get_weather(city):
     tuple: Contains weather icon URL, temperature (in °C), weather description, city name, and country.
            Returns None if the city is not found.
     """
-    API_key = "0a30dd8a5e2d97d75744dda4dc15e4e7"  # API key for OpenWeatherMap
+    API_key = ""  # 
     url = f"https://api.openweathermap.org/data/2.5/weather?q={city}&appid={API_key}"
     
     # Send GET request to OpenWeatherMap API
