@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import requests
 
-API_KEY = 'aece2d803e6e4bcbd8077bf8'
+API_KEY = ''
 BASE_URL = f'https://v6.exchangerate-api.com/v6/{API_KEY}/latest/'
 
 def get_exchange_rate(base_currency, target_currency):
