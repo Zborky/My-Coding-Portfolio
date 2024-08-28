@@ -3,8 +3,8 @@ import tensorflow as tf
 from googleapiclient.discovery import build
 
 
-# 1. Načítanie dát zo súboru
-with open('C:/Users/Jakub/Desktop/Python/chatbot/conversation.txt', 'r', encoding='utf-8') as file:
+# 1. Load data from file
+with open('your path to file with data', 'r', encoding='utf-8') as file:
     lines = file.readlines()
 
 questions = []
@@ -15,25 +15,25 @@ for line in lines:
     questions.append(question)
     answers.append(answer)
 
-# 2. Tokenizácia textu
+# 2. Token text
 tokenizer = tf.keras.preprocessing.text.Tokenizer()
 tokenizer.fit_on_texts(questions + answers)
 
-# Prevod textu na sekvencie (číselná reprezentácia slov)
+# Compare text on numbers (number reprezetation words)
 question_sequences = tokenizer.texts_to_sequences(questions)
 answer_sequences = tokenizer.texts_to_sequences(answers)
 
-# Padding sekvencií na rovnakú dĺžku
+# Padding sequencion on same length
 max_len = max(len(seq) for seq in question_sequences + answer_sequences)
 question_sequences = tf.keras.preprocessing.sequence.pad_sequences(question_sequences, maxlen=max_len, padding='post')
 answer_sequences = tf.keras.preprocessing.sequence.pad_sequences(answer_sequences, maxlen=max_len, padding='post')
 
-# Definovanie vstupných a výstupných dát
+# Defining input and output data
 input_data = np.array(question_sequences)
 output_data = np.array(answer_sequences)
 
-# 3. Vytvorenie LSTM modelu
-vocab_size = len(tokenizer.word_index) + 1  # Počet jedinečných slov
+# 3. Create LSTM model
+vocab_size = len(tokenizer.word_index) + 1  
 embedding_dim = 64
 lstm_units = 64
 
@@ -43,15 +43,15 @@ model = tf.keras.Sequential([
     tf.keras.layers.Dense(vocab_size, activation='softmax')
 ])
 
-# Kompilácia modelu
+# Compile modelu
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy')
 
-# 4. Tréning modelu
+# 4. Train model
 model.fit(input_data, np.expand_dims(output_data, axis=-1), epochs=500)
 
-# 5. Konfigurácia Google Custom Search API
-api_key = 'AIzaSyDwRBOnfJzpY7o_ck07f6dVlZS2JBO09DM'
-cse_id = '1782ec3d94ab347c1'
+# 5. Configuration Google Custom Search API
+api_key = ''
+cse_id = ''
 
 def google_search(query, api_key, cse_id, num_results=1):
     try:
@@ -74,7 +74,7 @@ def generate_google_response(query):
     except Exception as e:
         return f"Chyba pri generovaní odpovede: {e}"
 
-# 6. Funkcia na generovanie odpovede modelu alebo Google
+# 6. Function to generate answers from google or file
 def generate_response(user_input):
     input_seq = tokenizer.texts_to_sequences([user_input])
     input_seq = tf.keras.preprocessing.sequence.pad_sequences(input_seq, maxlen=max_len, padding='post')
@@ -91,12 +91,12 @@ def generate_response(user_input):
 def respond_with_model_or_google(user_input):
     response = generate_response(user_input)
     
-    if not response or len(response) < 10:  # Ak je odpoveď modelu prázdna alebo príliš krátka
+    if not response or len(response) < 10:  
         response = generate_google_response(user_input)
     
     return response
 
-# 7. Testovanie chatbota
+# 7. Testing chatbot
 while True:
     user_input = input("Ty: ")
     if user_input.lower() in ['zbohom', 'koniec', 'stop']:
