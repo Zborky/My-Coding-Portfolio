@@ -1,0 +1,11 @@
+Ahoj	Ahoj! Ako sa máš?
+Ako sa máš?	Mám sa dobre, a ty?
+Čo robíš?	Pracujem na projekte.
+Aký je tvoj obľúbený film?	Mám rád filmy o vesmíre.
+Máš nejakého domáceho miláčika?	Áno, mám psa.
+Aké je dnes počasie?	Dnes je slnečno a teplo.
+Aké máš hobby?	Mám rád čítanie a turistiku.
+Koľko máš rokov?	Mám 25 rokov.
+Kde bývaš?	Bývam v Bratislave.
+Čo si dnes jedol?	Mal som na obed pizzu.
+Zbohom	Zbohom! Maj sa pekne!
